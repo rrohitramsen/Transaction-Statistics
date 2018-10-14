@@ -5,17 +5,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class TransactionControllerTest {
+public class StatisticsControllerTest {
 
     @Before
     public void setUp() throws Exception {
     }
 
     @Test
-    public void makeTransaction() {
-    }
-
-    @Test
-    public void deleteAllTransactions() {
+    public void testStatistics() {
     }
 }

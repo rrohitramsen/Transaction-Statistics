@@ -1,4 +1,4 @@
-package com.n26.swagger;
+package com.n26.config;
 
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;

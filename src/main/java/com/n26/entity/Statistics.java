@@ -1,4 +1,4 @@
-package com.n26.api;
+package com.n26.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * @author rohitkumar
  */
-public class ResponseBody {
+public class Statistics {
 
     @ApiModelProperty(notes = "A BigDecimal specifying the total sum of transaction value in the last 60 seconds.")
     private BigDecimal sum;
@@ -23,14 +23,6 @@ public class ResponseBody {
 
     @ApiModelProperty(notes = "A long specifying the total number of transactions that happened in the last 60 seconds.")
     private long count;
-
-    public ResponseBody(BigDecimal sum, BigDecimal avg, BigDecimal max, BigDecimal min, long count) {
-        this.sum = sum;
-        this.avg = avg;
-        this.max = max;
-        this.min = min;
-        this.count = count;
-    }
 
     public BigDecimal getSum() {
         return sum;
