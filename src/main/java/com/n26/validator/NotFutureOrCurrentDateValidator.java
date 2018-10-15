@@ -11,6 +11,10 @@ public class NotFutureOrCurrentDateValidator implements ConstraintValidator<NotF
     @Override
     public boolean isValid(Date value, ConstraintValidatorContext context) {
 
+        if (value == null) {
+            return false;
+        }
+
         Date currentTime = new Date();
         boolean result = value.getTime() < currentTime.getTime();
 

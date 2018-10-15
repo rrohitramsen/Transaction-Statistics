@@ -1,10 +1,12 @@
 package com.n26.service;
 
 import com.n26.entity.Statistics;
+import org.springframework.stereotype.Service;
 
 /**
  * @author rohitkumar
  */
+@Service
 public interface StatisticsService {
 
     /**

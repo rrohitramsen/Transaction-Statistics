@@ -1,5 +1,7 @@
 package com.n26.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.n26.validator.IsOlderThen60Seconds;
 import com.n26.validator.NotFutureOrCurrentDate;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,23 +16,18 @@ import java.util.Objects;
 /**
  * @author rohitkumar
  */
-public class Transaction implements Comparable<Transaction>{
+public class Transaction {
 
     @NotNull(message = "amount is a required field")
-    @DecimalMin(value = "0", message = "amount is a required field")
-    @ApiModelProperty(notes = "transaction amount; a string of arbitrary length that is parsable as a BigDecimal.")
     private BigDecimal amount;
 
-    @NotNull(message = "timestamp is a required field")
-    @NotFutureOrCurrentDate(message = "Time should not be current or future")
-    @IsOlderThen60Seconds(message = "Transaction should not be older than 60 seconds.")
     @ApiModelProperty(notes = "transaction time in the ISO 8601 format YYYY-MM-DDThh:mm:ss.sssZ in the UTC timezone (this is not the current timestamp).")
     private Date timestamp;
 
     public Transaction() {
     }
 
-    public Transaction(@NotNull @NotEmpty BigDecimal amount, @NotNull @NotEmpty Date timestamp) {
+    public Transaction(BigDecimal amount, Date timestamp) {
         this.amount = amount;
         this.timestamp = timestamp;
     }
@@ -71,10 +68,5 @@ public class Transaction implements Comparable<Transaction>{
     @Override
     public int hashCode() {
         return Objects.hash(amount, timestamp);
-    }
-
-    @Override
-    public int compareTo(Transaction transaction) {
-        return transaction.getTimestamp().compareTo(this.timestamp);
     }
 }

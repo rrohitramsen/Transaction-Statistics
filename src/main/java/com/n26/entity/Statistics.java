@@ -10,49 +10,61 @@ import java.math.BigDecimal;
 public class Statistics {
 
     @ApiModelProperty(notes = "A BigDecimal specifying the total sum of transaction value in the last 60 seconds.")
-    private BigDecimal sum;
+    private String sum;
 
     @ApiModelProperty(notes = "A BigDecimal specifying the average amount of transaction value in the last 60 seconds.")
-    private BigDecimal avg;
+    private String avg;
 
     @ApiModelProperty(notes = "A BigDecimal specifying single highest transaction value in the last 60 seconds.")
-    private BigDecimal max;
+    private String max;
 
     @ApiModelProperty(notes = "A BigDecimal specifying single lowest transaction value in the last 60 seconds.")
-    private BigDecimal min;
+    private String min;
 
     @ApiModelProperty(notes = "A long specifying the total number of transactions that happened in the last 60 seconds.")
     private long count;
 
-    public BigDecimal getSum() {
+    public Statistics() {
+        initializeDefaultValues();
+    }
+
+    private void initializeDefaultValues() {
+        sum = "0.00";
+        avg = "0.00";
+        max = "0.00";
+        min = "0.00";
+        count = 0;
+    }
+
+    public String getSum() {
         return sum;
     }
 
-    public void setSum(BigDecimal sum) {
+    public void setSum(String sum) {
         this.sum = sum;
     }
 
-    public BigDecimal getAvg() {
+    public String getAvg() {
         return avg;
     }
 
-    public void setAvg(BigDecimal avg) {
+    public void setAvg(String avg) {
         this.avg = avg;
     }
 
-    public BigDecimal getMax() {
+    public String getMax() {
         return max;
     }
 
-    public void setMax(BigDecimal max) {
+    public void setMax(String max) {
         this.max = max;
     }
 
-    public BigDecimal getMin() {
+    public String getMin() {
         return min;
     }
 
-    public void setMin(BigDecimal min) {
+    public void setMin(String min) {
         this.min = min;
     }
 
@@ -62,5 +74,16 @@ public class Statistics {
 
     public void setCount(long count) {
         this.count = count;
+    }
+
+    @Override
+    public String toString() {
+        return "Statistics{" +
+                "sum='" + sum + '\'' +
+                ", avg='" + avg + '\'' +
+                ", max='" + max + '\'' +
+                ", min='" + min + '\'' +
+                ", count=" + count +
+                '}';
     }
 }

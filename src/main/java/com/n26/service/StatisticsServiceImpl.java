@@ -1,17 +1,20 @@
 package com.n26.service;
 
-import com.n26.api.TransactionController;
 import com.n26.entity.Statistics;
 import com.n26.entity.Transaction;
-import com.n26.exception.StatisticsNotAvailableException;
 import com.n26.helper.BigDecimalSummaryStatistics;
 import com.n26.repository.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
+@Service
 public class StatisticsServiceImpl implements StatisticsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsServiceImpl.class);
@@ -27,7 +30,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         Map<Transaction, Long> allTransactions = transactionRepository.getAllTransactions();
 
         if (allTransactions == null || allTransactions.isEmpty()) {
-            throw new StatisticsNotAvailableException("Statics not available for the current 60 seconds.");
+            //throw new StatisticsNotAvailableException("Statics not available for the current 60 seconds.");
+            return new Statistics();
         }
 
         Statistics statistics = buildLastSixtySecondsStatistics(allTransactions);
@@ -36,7 +40,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private Statistics buildLastSixtySecondsStatistics(Map<Transaction, Long> allTransactions) {
 
-       Set<Transaction> sixtySecondTransactions = getAllTransactionsInSixtSecondRange(allTransactions);
+       Set<Transaction> sixtySecondTransactions = getAllTransactionsInSixtySecondRange(allTransactions);
 
         BigDecimalSummaryStatistics bigDecimalSummaryStatistics = sixtySecondTransactions
                 .stream()
@@ -46,11 +50,20 @@ public class StatisticsServiceImpl implements StatisticsService {
         LOGGER.debug("Big Decimal Summary Statistics,"+bigDecimalSummaryStatistics);
 
         Statistics statistics = new Statistics();
-        statistics.setAvg(bigDecimalSummaryStatistics.getAvg());
+
+        Object avg = bigDecimalSummaryStatistics.getAvg();
+        statistics.setAvg(((BigDecimal) avg).setScale(2,4).toString());
+
         statistics.setCount(bigDecimalSummaryStatistics.getCount());
-        statistics.setMax(bigDecimalSummaryStatistics.getMax());
-        statistics.setMin(bigDecimalSummaryStatistics.getMin());
-        statistics.setSum(bigDecimalSummaryStatistics.getSum());
+
+        Object max = bigDecimalSummaryStatistics.getMax();
+        statistics.setMax(((BigDecimal) max).setScale(2,4).toString());
+
+        Object min = bigDecimalSummaryStatistics.getMin();
+        statistics.setMin(((BigDecimal) min).setScale(2,4).toString());
+
+        Object sum = bigDecimalSummaryStatistics.getSum();
+        statistics.setSum(((BigDecimal) sum).setScale(2,4).toString());
 
         LOGGER.info("Returning last sixty second statistics."+statistics);
 
@@ -58,7 +71,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     }
 
-    private Set<Transaction> getAllTransactionsInSixtSecondRange(Map<Transaction, Long> allTransactions) {
+    private Set<Transaction> getAllTransactionsInSixtySecondRange(Map<Transaction, Long> allTransactions) {
 
         Set<Transaction> transactions = allTransactions.keySet();
         Date currentDate = new Date();

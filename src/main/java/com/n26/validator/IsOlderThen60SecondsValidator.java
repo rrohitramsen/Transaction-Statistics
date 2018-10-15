@@ -13,6 +13,10 @@ public class IsOlderThen60SecondsValidator implements ConstraintValidator<IsOlde
     @Override
     public boolean isValid(Date value, ConstraintValidatorContext context) {
 
+        if (value == null) {
+            return false;
+        }
+
         Date currentTime = new Date();
         boolean isOlderThen60Seconds = false;
         if (value.getTime() < currentTime.getTime()) {

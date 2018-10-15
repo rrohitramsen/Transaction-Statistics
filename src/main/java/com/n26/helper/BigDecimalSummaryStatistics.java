@@ -1,5 +1,7 @@
 package com.n26.helper;
 
+import sun.nio.ch.DirectBuffer;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -17,11 +19,11 @@ public class BigDecimalSummaryStatistics implements Consumer<BigDecimal> {
                 BigDecimalSummaryStatistics::accept, BigDecimalSummaryStatistics::merge);
     }
 
-    MathContext twoDecimalHalRoundUp = new MathContext(2, RoundingMode.HALF_UP);
-    private BigDecimal sum = new BigDecimal(0, twoDecimalHalRoundUp),
-            min = new BigDecimal(0, twoDecimalHalRoundUp),
-            max = new BigDecimal(0, twoDecimalHalRoundUp),
-            avg = new BigDecimal(0, twoDecimalHalRoundUp);
+    MathContext twoDecimalHalfRoundUp = new MathContext(2, RoundingMode.HALF_UP);
+    private BigDecimal sum = new BigDecimal(0, twoDecimalHalfRoundUp),
+            min = new BigDecimal(0, twoDecimalHalfRoundUp),
+            max = new BigDecimal(0, twoDecimalHalfRoundUp),
+            avg = new BigDecimal(0, twoDecimalHalfRoundUp);
 
     private long count;
 
@@ -55,7 +57,7 @@ public class BigDecimalSummaryStatistics implements Consumer<BigDecimal> {
                 count += s.count;
             }
         }
-        this.avg = getAverage(twoDecimalHalRoundUp);
+        //this.avg = getAverage(twoDecimalHalRoundUp);
         return this;
     }
 
@@ -68,7 +70,13 @@ public class BigDecimalSummaryStatistics implements Consumer<BigDecimal> {
     }
 
     public BigDecimal getAverage(MathContext mc) {
-        return count < 2? sum: sum.divide(BigDecimal.valueOf(count), mc);
+
+        if (count < 2) {
+            return sum;
+        }
+        BigDecimal result = sum.divide(new BigDecimal(count, mc), mc);
+
+        return result.setScale(2, 4);
     }
 
     public BigDecimal getMin() {
@@ -81,7 +89,9 @@ public class BigDecimalSummaryStatistics implements Consumer<BigDecimal> {
 
 
     public BigDecimal getAvg() {
-        return avg;
+
+        MathContext twoDecimalHalfRoundUp = new MathContext(5, RoundingMode.HALF_UP);
+        return getAverage(twoDecimalHalfRoundUp);
     }
 
     @Override

@@ -2,9 +2,12 @@ package com.n26.repository;
 
 import com.n26.entity.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
+
+@Repository
 public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Autowired
