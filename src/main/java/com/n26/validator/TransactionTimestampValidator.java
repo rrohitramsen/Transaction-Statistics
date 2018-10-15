@@ -1,24 +1,22 @@
 package com.n26.validator;
 
-import com.n26.exception.FieldsNotParsableException;
-import com.n26.exception.FutureTransactionException;
-import com.n26.exception.OlderTransactionException;
+import com.n26.exception.FieldValidatorException;
+import com.n26.helper.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
-import java.util.TimeZone;
+
+import static com.n26.validator.ValidatorConstants.*;
 
 public class TransactionTimestampValidator implements ConstraintValidator<TransactionTimestamp, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionTimestampValidator.class);
 
-    public static final int SIXTY_SECONDS_IN_MILLIS = 60000;
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
@@ -27,31 +25,22 @@ public class TransactionTimestampValidator implements ConstraintValidator<Transa
             return false;
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date inputDate = DateUtils.parseDate(value);
+        Long currentTimeInMillis = Instant.now().toEpochMilli();
+        Long inputTimeInMillis = inputDate.getTime();
 
-        try {
-            Date inputDate = dateFormat.parse(value);
-            Long currentTimeInMillis = Instant.now().toEpochMilli();
-            Long inputTimeInMillis = inputDate.getTime();
+        LOGGER.info("currentTimeInMillis = "+currentTimeInMillis+" and inputTimeInMillis = "+inputTimeInMillis);
 
-            LOGGER.info("currentTimeInMillis = "+currentTimeInMillis+" and inputTimeInMillis = "+inputTimeInMillis);
+        if (inputTimeInMillis < currentTimeInMillis) {
 
-            if (inputTimeInMillis < currentTimeInMillis) {
-
-                if (currentTimeInMillis - inputTimeInMillis > SIXTY_SECONDS_IN_MILLIS)  {
-                    LOGGER.info("Transaction should not be older than 60 seconds");
-                    throw new OlderTransactionException("Transaction should not be older than 60 seconds");
-                }
-
-            }else {
-                LOGGER.info("Time should not be current or future");
-                throw new FutureTransactionException("Time should not be current or future");
+            if (currentTimeInMillis - inputTimeInMillis > SIXTY_SECONDS_IN_MILLIS)  {
+                LOGGER.info(TRANSACTION_OLDER_THEN_60_SECONDS);
+                throw new FieldValidatorException(TRANSACTION_OLDER_THEN_60_SECONDS, HttpStatus.NO_CONTENT);
             }
 
-        } catch (ParseException e) {
-            LOGGER.info("FieldsNotParsableException");
-            throw new FieldsNotParsableException(e.getMessage());
+        }else {
+            LOGGER.info(TRANSACTION_TIME_FUTURE_OR_CURRENT);
+            throw new FieldValidatorException(TRANSACTION_TIME_FUTURE_OR_CURRENT, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         return true;

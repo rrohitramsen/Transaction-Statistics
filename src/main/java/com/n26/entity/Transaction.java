@@ -1,13 +1,7 @@
 package com.n26.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.n26.validator.IsOlderThen60Seconds;
-import com.n26.validator.NotFutureOrCurrentDate;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;

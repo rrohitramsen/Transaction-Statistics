@@ -1,6 +1,7 @@
 package com.n26.api;
 
 import com.n26.entity.Transaction;
+import com.n26.helper.DateUtils;
 import com.n26.service.TransactionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,9 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 /**
  * @author rohitkumar
@@ -39,7 +37,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
 
-    @ApiOperation(value = "Called every time a transaction is made. It is also the sole input of this rest API.", response = Response.class)
+    @ApiOperation(value = "Called every time a transaction is made. It is also the sole input of this rest API.", response = ResponseEntity.class)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Success"),
@@ -48,7 +46,7 @@ public class TransactionController {
             @ApiResponse(code = 400, message = "Invalid Json"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Failure")})
-    public ResponseEntity<Response> makeTransaction(@Valid @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Object> makeTransaction(@Valid @RequestBody TransactionDto transactionDto) {
 
         LOGGER.debug("Inside make transaction API."+transactionDto);
 
@@ -65,10 +63,11 @@ public class TransactionController {
             @ApiResponse(code = 204, message = "All transactions are deleted."),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Failure")})
-    public ResponseEntity<Response> deleteAllTransactions() {
+    public ResponseEntity<Object> deleteAllTransactions() {
 
         LOGGER.debug("Inside delete all transactions API.");
         boolean deleted = transactionService.deleteAllTransactions();
+
         ResponseEntity responseEntity;
         if (deleted) {
            responseEntity = new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -83,16 +82,9 @@ public class TransactionController {
     private Transaction buildTransaction(TransactionDto transactionDto) {
 
         Transaction transaction = new Transaction();
-
         transaction.setAmount(new BigDecimal(transactionDto.getAmount()));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        transaction.setTimestamp(DateUtils.parseDate(transactionDto.getTimestamp()));
 
-        try {
-            transaction.setTimestamp(dateFormat.parse(transactionDto.getTimestamp()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         return transaction;
     }
 

@@ -1,16 +1,13 @@
 package com.n26.api;
 
 import com.n26.validator.Amount;
-import com.n26.validator.IsOlderThen60Seconds;
 import com.n26.validator.TransactionTimestamp;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+/**
+ * @author rohitkumar
+ */
 public class TransactionDto {
-
 
     @ApiModelProperty(notes = "transaction amount; a string of arbitrary length that is parsable as a BigDecimal.")
     @Amount

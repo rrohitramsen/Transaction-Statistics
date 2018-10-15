@@ -1,6 +1,7 @@
 package com.n26.validator;
 
-import com.n26.exception.FieldsNotParsableException;
+import com.n26.exception.FieldValidatorException;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -18,7 +19,7 @@ public class AmountValidator implements ConstraintValidator<Amount, String> {
         try {
             BigDecimal amount = new BigDecimal(value);
         }catch (NumberFormatException e) {
-            throw new FieldsNotParsableException(e.getMessage());
+            throw new FieldValidatorException(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         return true;

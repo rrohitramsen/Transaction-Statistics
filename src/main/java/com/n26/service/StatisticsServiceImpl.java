@@ -30,7 +30,6 @@ public class StatisticsServiceImpl implements StatisticsService {
         Map<Transaction, Long> allTransactions = transactionRepository.getAllTransactions();
 
         if (allTransactions == null || allTransactions.isEmpty()) {
-            //throw new StatisticsNotAvailableException("Statics not available for the current 60 seconds.");
             return new Statistics();
         }
 
