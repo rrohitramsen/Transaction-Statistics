@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author rohitkumar
+ *
+ * LRU Cache for storing transactions and removing all older transactions which are older then 60 seconds..
+ */
 @Component
 public class LRUCache extends LinkedHashMap<Transaction, Long> {
 

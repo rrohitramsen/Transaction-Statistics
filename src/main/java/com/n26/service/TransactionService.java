@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public interface TransactionService {
 
     /**
-     * Complete the transaction.
+     * Make the transaction.
      * @param transaction
      */
     void makeTransaction(Transaction transaction);

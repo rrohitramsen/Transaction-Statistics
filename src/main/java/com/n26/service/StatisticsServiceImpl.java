@@ -19,6 +19,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsServiceImpl.class);
 
+    public static final int SCALE = 2;
+
     @Autowired
     private TransactionRepository transactionRepository;
 
@@ -48,26 +50,32 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         LOGGER.debug("Big Decimal Summary Statistics,"+bigDecimalSummaryStatistics);
 
-        Statistics statistics = new Statistics();
-
-        Object avg = bigDecimalSummaryStatistics.getAvg();
-        statistics.setAvg(((BigDecimal) avg).setScale(2,4).toString());
-
-        statistics.setCount(bigDecimalSummaryStatistics.getCount());
-
-        Object max = bigDecimalSummaryStatistics.getMax();
-        statistics.setMax(((BigDecimal) max).setScale(2,4).toString());
-
-        Object min = bigDecimalSummaryStatistics.getMin();
-        statistics.setMin(((BigDecimal) min).setScale(2,4).toString());
-
-        Object sum = bigDecimalSummaryStatistics.getSum();
-        statistics.setSum(((BigDecimal) sum).setScale(2,4).toString());
+        Statistics statistics = buildStatisticsFromBigDecimalStatistics(bigDecimalSummaryStatistics);
 
         LOGGER.info("Returning last sixty second statistics."+statistics);
 
         return statistics;
 
+    }
+
+    private Statistics buildStatisticsFromBigDecimalStatistics(BigDecimalSummaryStatistics bigDecimalSummaryStatistics) {
+
+        Statistics statistics = new Statistics();
+
+        Object avg = bigDecimalSummaryStatistics.getAvg();
+        statistics.setAvg(((BigDecimal) avg).setScale(SCALE, BigDecimal.ROUND_HALF_UP).toString());
+
+        statistics.setCount(bigDecimalSummaryStatistics.getCount());
+
+        Object max = bigDecimalSummaryStatistics.getMax();
+        statistics.setMax(((BigDecimal) max).setScale(SCALE, BigDecimal.ROUND_HALF_UP).toString());
+
+        Object min = bigDecimalSummaryStatistics.getMin();
+        statistics.setMin(((BigDecimal) min).setScale(SCALE, BigDecimal.ROUND_HALF_UP).toString());
+
+        Object sum = bigDecimalSummaryStatistics.getSum();
+        statistics.setSum(((BigDecimal) sum).setScale(SCALE, BigDecimal.ROUND_HALF_UP).toString());
+        return statistics;
     }
 
     private Set<Transaction> getAllTransactionsInSixtySecondRange(Map<Transaction, Long> allTransactions) {

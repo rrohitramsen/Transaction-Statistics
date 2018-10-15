@@ -13,6 +13,11 @@ import java.util.Date;
 
 import static com.n26.validator.ValidatorConstants.*;
 
+/**
+ * @author rohitkumar
+ *
+ * {@link com.n26.entity.Transaction} validations.
+ */
 public class TransactionTimestampValidator implements ConstraintValidator<TransactionTimestamp, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionTimestampValidator.class);

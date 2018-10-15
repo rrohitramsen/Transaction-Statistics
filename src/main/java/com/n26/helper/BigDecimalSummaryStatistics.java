@@ -8,7 +8,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collector;
 
 /**
+ * @author rohitkumar
  *
+ * This class is inspired from IntSummaryStatistics.
  */
 public class BigDecimalSummaryStatistics implements Consumer<BigDecimal> {
 
@@ -88,8 +90,8 @@ public class BigDecimalSummaryStatistics implements Consumer<BigDecimal> {
 
     public BigDecimal getAvg() {
 
-        MathContext twoDecimalHalfRoundUp = new MathContext(5, RoundingMode.HALF_UP);
-        return getAverage(twoDecimalHalfRoundUp);
+        MathContext decimalHalfRoundUp = new MathContext(5, RoundingMode.HALF_UP);
+        return getAverage(decimalHalfRoundUp);
     }
 
     @Override

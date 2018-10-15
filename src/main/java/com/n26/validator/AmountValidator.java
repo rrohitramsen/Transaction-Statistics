@@ -7,6 +7,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.math.BigDecimal;
 
+/**
+ * @author rohitkumar
+ * Amount validations.
+ */
 public class AmountValidator implements ConstraintValidator<Amount, String> {
 
     @Override
