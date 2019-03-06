@@ -12,14 +12,14 @@ GET /statistics – returns the statistic based of the transactions of the last 
 DELETE /transactions – deletes all transactions.
 ```
 
-You can complete the challenge offline using an IDE of your choice. To download the application skeleton, please enable Use Git in the editor and follow the instructions on screen. Please make sure you push your changes to the master branch and test your solution on HackerRank before submitting.
-Create a simple entity management system that provides a REST endpoint to manage any entity (e.g. a product in a catalog, patient information in healthcare etc.).
 
-
-## How to start ?
-
+## `How to Start`
+* [transaction_statistics.sh](/transaction_statistics.sh) execute this script. 
 ```
-$ mvn spring-boot:run
+$ ./transaction_statistics.sh
+```
+* It will build the project and start the spring boot application.
+
 ```
 
 ## Swagger-UI
