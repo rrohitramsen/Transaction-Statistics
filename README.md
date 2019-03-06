@@ -20,7 +20,6 @@ $ ./transaction_statistics.sh
 ```
 * It will build the project and start the spring boot application.
 
-```
 
 ## Swagger-UI
 * After starting the application Click on [Swagger-home](http://localhost:8080/swagger-ui.html)
